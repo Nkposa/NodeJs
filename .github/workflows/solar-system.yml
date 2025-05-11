@@ -8,7 +8,7 @@ on:
       - feature
 
 env:
-  MONGO_URI: ${{ vars.MONGO_URI}}   
+  MONGO_URI: mongodb+srv://naveenhima91:${{ secrets.MONGO_PASSWORD }}@cluster0.mongodb.net/solar_system_db?retryWrites=true&w=majority   
   MONGO_USERNAME: ${{ vars.MONGO_USERNAME}} 
   MONGO_PASSWORD: ${{ secrets.MONGO_PASSWORD}}  
     
