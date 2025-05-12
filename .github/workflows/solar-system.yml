@@ -8,7 +8,7 @@ on:
       - feature
 
 env:
-  MONGO_URI: ${{ vars.MONGO_URI}}   
+  MONGO_URI: 'mongodb+srv://cluster0.5pziqkq.mongodb.net/solar_system_db' 
   MONGO_USERNAME: ${{ vars.MONGO_USERNAME}} 
   MONGO_PASSWORD: ${{ secrets.MONGO_PASSWORD}}  
     
@@ -28,14 +28,14 @@ jobs:
         - name: Install Dependencies
           run: npm install
     
-        # - name: Unit Testing
-        #   run: npm test
+        - name: Unit Testing
+          run: npm test
 
-        - name: upload artifacts
-          uses: actions/upload-artifact@v3
-          with:
-            name: test-result
-            path: results
+        # - name: upload artifacts
+        #   uses: actions/upload-artifact@v3
+        #   with:
+        #     name: test-result
+        #     path: results
            
           
     
