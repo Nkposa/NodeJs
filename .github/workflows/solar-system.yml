@@ -54,14 +54,16 @@ jobs:
       uses: docker/login-action@v3
       with:
         username: ${{ vars.DOCKERHUB_USERNAME }}
-        password: ${{ secrets.DOCKERHUB_TOKEN }}    
-    
-    - name: Build and push
-      uses: docker/build-push-action@v6
+        password: ${{ secrets.DOCKERHUB_TOKEN }}     
+
+       
+    - name: GHCR login
+      uses: docker/login-action@v3
       with:
-        context: .
-        push: true
-        tags: ${{ vars.DOCKERHUB_USERNAME }}/naveen-solar-systemapp:${{github.sha}}   
+        registry: ghcr.io
+        username: ${{ github.repository_owner }}
+        password: ${{ secrets.GITHUB_TOKEN }}    
+    
     
     - name: Docker image test
       run: |
@@ -80,6 +82,16 @@ jobs:
 
         # echo "Testing Image URL using wget..."
         # wget -q -O - http://localhost:3000/live | grep live
+
+              
+    - name: Push to gh and docker
+      uses: docker/build-push-action@v6
+      with:
+        context: .
+        push: true
+        tags: |
+          ${{ vars.DOCKERHUB_USERNAME }}/naveen-solar-systemapp:${{github.sha}}   
+          ghcr.io/${{github.repository_owner}}/naveen-solar-systemapp:${{github.sha}} 
 
 
 
