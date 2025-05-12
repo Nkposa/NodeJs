@@ -1,98 +1,190 @@
-const path = require('path');
-const express = require('express');
-const OS = require('os');
-const bodyParser = require('body-parser');
-const { MongoClient, ServerApiVersion } = require('mongodb');
-const mongoose = require("mongoose");
-const cors = require('cors');
+let mongoose = require("mongoose");
+let server = require("./app");
+let chai = require("chai");
+let chaiHttp = require("chai-http");
 
-const app = express();
 
-// Middleware
-app.use(bodyParser.json());
-app.use(express.static(path.join(__dirname, '/')));
-app.use(cors());
+// Assertion 
+chai.should();
+chai.use(chaiHttp); 
 
-// MongoDB Connection using MongoClient
-const uri = process.env.MONGO_URI;
+describe('Planets API Suite', () => {
 
-const client = new MongoClient(uri, {
-  serverApi: {
-    version: ServerApiVersion.v1,
-    strict: true,
-    deprecationErrors: true,
-  }
+    describe('Fetching Planet Details', () => {
+        it('it should fetch a planet named Mercury', (done) => {
+            let payload = {
+                id: 1
+            }
+          chai.request(server)
+              .post('/planet')
+              .send(payload)
+              .end((err, res) => {
+                    res.should.have.status(200);
+                    res.body.should.have.property('id').eql(1);
+                    res.body.should.have.property('name').eql('Mercury');
+                done();
+              });
+        });
+
+        it('it should fetch a planet named Venus', (done) => {
+            let payload = {
+                id: 2
+            }
+          chai.request(server)
+              .post('/planet')
+              .send(payload)
+              .end((err, res) => {
+                    res.should.have.status(200);
+                    res.body.should.have.property('id').eql(2);
+                    res.body.should.have.property('name').eql('Venus');
+                done();
+              });
+        });
+
+        it('it should fetch a planet named Earth', (done) => {
+            let payload = {
+                id: 3
+            }
+          chai.request(server)
+              .post('/planet')
+              .send(payload)
+              .end((err, res) => {
+                    res.should.have.status(200);
+                    res.body.should.have.property('id').eql(3);
+                    res.body.should.have.property('name').eql('Earth');
+                done();
+              });
+        });
+        it('it should fetch a planet named Mars', (done) => {
+            let payload = {
+                id: 4
+            }
+          chai.request(server)
+              .post('/planet')
+              .send(payload)
+              .end((err, res) => {
+                    res.should.have.status(200);
+                    res.body.should.have.property('id').eql(4);
+                    res.body.should.have.property('name').eql('Mars');
+                done();
+              });
+        });
+
+        it('it should fetch a planet named Jupiter', (done) => {
+            let payload = {
+                id: 5
+            }
+          chai.request(server)
+              .post('/planet')
+              .send(payload)
+              .end((err, res) => {
+                    res.should.have.status(200);
+                    res.body.should.have.property('id').eql(5);
+                    res.body.should.have.property('name').eql('Jupiter');
+                done();
+              });
+        });
+
+        it('it should fetch a planet named Satrun', (done) => {
+            let payload = {
+                id: 6
+            }
+          chai.request(server)
+              .post('/planet')
+              .send(payload)
+              .end((err, res) => {
+                    res.should.have.status(200);
+                    res.body.should.have.property('id').eql(6);
+                    res.body.should.have.property('name').eql('Saturn');
+                done();
+              });
+        });
+
+        it('it should fetch a planet named Uranus', (done) => {
+            let payload = {
+                id: 7
+            }
+          chai.request(server)
+              .post('/planet')
+              .send(payload)
+              .end((err, res) => {
+                    res.should.have.status(200);
+                    res.body.should.have.property('id').eql(7);
+                    res.body.should.have.property('name').eql('Uranus');
+                done();
+              });
+        });
+
+        it('it should fetch a planet named Neptune', (done) => {
+            let payload = {
+                id: 8
+            }
+          chai.request(server)
+              .post('/planet')
+              .send(payload)
+              .end((err, res) => {
+                    res.should.have.status(200);
+                    res.body.should.have.property('id').eql(8);
+                    res.body.should.have.property('name').eql('Neptune');
+                done();
+              });
+        });
+
+        // it('it should fetch a planet named Pluto', (done) => {
+        //     let payload = {
+        //         id: 9
+        //     }
+        //   chai.request(server)
+        //       .post('/planet')
+        //       .send(payload)
+        //       .end((err, res) => {
+        //             res.should.have.status(200);
+        //             res.body.should.have.property('id').eql(9);
+        //             res.body.should.have.property('name').eql('Sun');
+        //         done();
+        //       });
+        // });
+
+
+    });        
 });
 
-async function connectToMongo() {
-  try {
-    await client.connect();
-    await client.db("admin").command({ ping: 1 });
-    console.log("Pinged your deployment. You successfully connected to MongoDB!");
+//Use below test case to achieve coverage
+describe('Testing Other Endpoints', () => {
 
-    // Initialize Mongoose after successful connection
-    await mongoose.connect(uri, {
-      useNewUrlParser: true,
-      useUnifiedTopology: true
+    describe('it should fetch OS Details', () => {
+        it('it should fetch OS details', (done) => {
+          chai.request(server)
+              .get('/os')
+              .end((err, res) => {
+                    res.should.have.status(200);
+                done();
+              });
+        });
     });
-    console.log("Mongoose connected successfully.");
-  } catch (err) {
-    console.error("MongoDB connection error:", err);
-  }
-}
 
-connectToMongo();
+    describe('it should fetch Live Status', () => {
+        it('it checks Liveness endpoint', (done) => {
+          chai.request(server)
+              .get('/live')
+              .end((err, res) => {
+                    res.should.have.status(200);
+                    res.body.should.have.property('status').eql('live');
+                done();
+              });
+        });
+    });
 
-// Mongoose Schema and Model
-const Schema = mongoose.Schema;
+    describe('it should fetch Ready Status', () => {
+        it('it checks Readiness endpoint', (done) => {
+          chai.request(server)
+              .get('/ready')
+              .end((err, res) => {
+                    res.should.have.status(200);
+                    res.body.should.have.property('status').eql('ready');
+                done();
+              });
+        });
+    });
 
-const dataSchema = new Schema({
-  name: String,
-  id: Number,
-  description: String,
-  image: String,
-  velocity: String,
-  distance: String
 });
-
-const planetModel = mongoose.model('planets', dataSchema);
-
-// Routes
-app.post('/planet', function (req, res) {
-  planetModel.findOne({ id: req.body.id }, function (err, planetData) {
-    if (err || !planetData) {
-      res.status(404).send("Planet not found or error occurred.");
-    } else {
-      res.send(planetData);
-    }
-  });
-});
-
-app.get('/', async (req, res) => {
-  res.sendFile(path.join(__dirname, '/', 'index.html'));
-});
-
-app.get('/os', function (req, res) {
-  res.setHeader('Content-Type', 'application/json');
-  res.send({
-    os: OS.hostname(),
-    env: process.env.NODE_ENV
-  });
-});
-
-app.get('/live', function (req, res) {
-  res.setHeader('Content-Type', 'application/json');
-  res.send({ status: "live" });
-});
-
-app.get('/ready', function (req, res) {
-  res.setHeader('Content-Type', 'application/json');
-  res.send({ status: "ready" });
-});
-
-// Start Server
-app.listen(3000, () => {
-  console.log("Server successfully running on port - 3000");
-});
-
-module.exports = app;
