@@ -8,9 +8,10 @@ on:
       - feature
 
 env:
-  MONGO_URI: 'mongodb+srv://naveenhima91:${{ secrets.MONGO_PASSWORD }}@cluster0.5pziqkq.mongodb.net/solar_system_db?retryWrites=true&w=majority'
-  MONGO_USERNAME: ${{ vars.MONGO_USERNAME }} 
-  MONGO_PASSWORD: ${{ secrets.MONGO_PASSWORD }}  
+  MONGO_URI: 'mongodb+srv://${{ vars.MONGO_USERNAME }}:${{ secrets.MONGO_PASSWORD }}@cluster0.5pziqkq.mongodb.net/solar_system_db?retryWrites=true&w=majority'
+  MONGO_USERNAME: ${{ vars.MONGO_USERNAME }}
+  MONGO_PASSWORD: ${{ secrets.MONGO_PASSWORD }}
+ 
 
 jobs:
   unit-testing:
