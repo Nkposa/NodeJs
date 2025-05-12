@@ -79,7 +79,7 @@ jobs:
         docker logs naveen-solar-systemapp
 
         # echo "Testing Image URL using wget..."
-        # wget -q -O - http://localhost:3000/live | grep live
+        wget -q -O - http://localhost:3000/live | grep live
 
 
 
