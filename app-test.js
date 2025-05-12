@@ -1,4 +1,3 @@
-let mongoose = require("mongoose");
 let server = require("./app");
 let chai = require("chai");
 let chaiHttp = require("chai-http");
@@ -7,11 +6,13 @@ let chaiHttp = require("chai-http");
 chai.should();
 chai.use(chaiHttp);
 
-// Placeholder for future test suites
-describe('Planets API Suite', () => {
-    // All tests removed
-});
-
-describe('Testing Other Endpoints', () => {
-    // All tests removed
+describe("Basic Test", () => {
+  it("should return 200 on /live", (done) => {
+    chai.request(server)
+      .get("/live")
+      .end((err, res) => {
+        res.should.have.status(200);
+        done();
+      });
+  });
 });

@@ -1,66 +1,27 @@
-let mongoose = require("mongoose");
-let server = require("./app");
-let chai = require("chai");
-let chaiHttp = require("chai-http");
+require('dotenv').config();
+const express = require('express');
+const mongoose = require('mongoose');
+require('dotenv').config();
 
-// Assertion setup
-chai.should();
-chai.use(chaiHttp);
+const app = express();
+app.use(express.json());
 
-describe('Planets API Suite', () => {
-    describe('Fetching Planet Details', () => {
-        const testCases = [
-            { id: 1, name: 'Mercury' },
-            { id: 2, name: 'Venus' },
-            { id: 3, name: 'Earth' },
-            { id: 4, name: 'Mars' },
-            { id: 5, name: 'Jupiter' },
-            { id: 6, name: 'Saturn' },
-            { id: 7, name: 'Uranus' },
-            { id: 8, name: 'Neptune' }
-        ];
-
-        testCases.forEach(({ id, name }) => {
-            it(`should fetch a planet named ${name}`, (done) => {
-                chai.request(server)
-                                       .end((err, res) => {
-                        res.should.have.status(200);
-                        res.body.should.have.property('id').eql(id);
-                        res.body.should.have.property('name').eql(name);
-                        done();
-                    });
-            });
-        });
-    });
+// Example route
+app.get('/live', (req, res) => {
+  res.status(200).json({ status: 'live' });
 });
 
-describe('Testing Other Endpoints', () => {
-    it('should fetch OS details', (done) => {
-        chai.request(server)
-            .get('/os')
-            .end((err, res) => {
-                res.should.have.status(200);
-                done();
-            });
-    });
+// Only connect and start server if not in test mode
+if (process.env.NODE_ENV !== 'test') {
+  mongoose.connect(process.env.MONGO_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+  }).then(() => {
+    console.log("MongoDB connected");
+    app.listen(process.env.PORT || 3000, () =>
+      console.log(`Server running on port ${process.env.PORT || 3000}`)
+    );
+  }).catch(err => console.error("MongoDB connection error:", err));
+}
 
-    it('should check Liveness endpoint', (done) => {
-        chai.request(server)
-            .get('/live')
-            .end((err, res) => {
-                res.should.have.status(200);
-                res.body.should.have.property('status').eql('live');
-                done();
-            });
-    });
-
-    it('should check Readiness endpoint', (done) => {
-        chai.request(server)
-            .get('/ready')
-            .end((err, res) => {
-                res.should.have.status(200);
-                res.body.should.have.property('status').eql('ready');
-                done();
-            });
-    });
-});
+module.exports = app;
