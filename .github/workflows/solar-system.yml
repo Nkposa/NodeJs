@@ -74,7 +74,7 @@ jobs:
         echo $IP
 
         echo Testing Image url using wget
-        wget -q -o - 127.0.0.1:3000/live | grep live    
+        wget -q -O - http://172.17.0.2:3000/live | grep live
 
 
     
