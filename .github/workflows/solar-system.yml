@@ -63,9 +63,7 @@ jobs:
     
     - name: Docker image test
       run: |
-        docker stop naveen-solar-systemapp
-        docker rm naveen-solar-systemapp
-
+      
         docker images
         docker run --name naveen-solar-systemapp -d \
           -p 3000:3000 \
