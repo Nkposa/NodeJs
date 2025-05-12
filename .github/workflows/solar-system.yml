@@ -63,20 +63,24 @@ jobs:
     
     - name: Docker image test
       run: |
-          docker images
-          docker run --name naveen-solar-systemapp -d \
-            -p 3000:3000 \
-            -e MONGO_URI=$MONGO_URI \
-            -e MONGO_USERNAME=$MONGO_USERNAME \
-            -e MONGO_PASSWORD=$MONGO_PASSWORD \
-          ${{ vars.DOCKERHUB_USERNAME }}/naveen-solar-systemapp:${{ github.sha }}
-          sleep 5  # Wait for the container to start
+        docker stop naveen-solar-systemapp
+        docker rm naveen-solar-systemapp
 
-          echo "Checking container logs..."
-          docker logs naveen-solar-systemapp
+        docker images
+        docker run --name naveen-solar-systemapp -d \
+          -p 3000:3000 \
+          -e MONGO_URI="${{ env.MONGO_URI }}" \
+          -e MONGO_USERNAME="${{ env.MONGO_USERNAME }}" \
+          -e MONGO_PASSWORD="${{ env.MONGO_PASSWORD }}" \
+        ${{ vars.DOCKERHUB_USERNAME }}/naveen-solar-systemapp:${{ github.sha }}
+        sleep 5
 
-          echo "Testing Image URL using wget..."
-          wget -q -O - http://localhost:3000/live | grep live
+        echo "Checking container logs..."
+        docker logs naveen-solar-systemapp
+
+        echo "Testing Image URL using wget..."
+        wget -q -O - http://localhost:3000/live | grep live
+
 
 
     
